@@ -1,0 +1,19 @@
+{
+  "name": "es.jacksparrot.audioso",
+  "version": "1.0.0",
+  "displayName": "jacksparrot Audio with scriptable objects",
+  "description": "Utility to play music and sfx in your game",
+  "unity": "2018.1",
+  "unityRelease": "0f1",
+  "keywords": [
+    "audio"
+  ],
+  "dependencies": {
+    "es.jacksparrot.utilsso": "1.0.0"
+  },
+  "author": {
+    "name": "Francisco Ruiz",
+    "email": "franciscoruizpons@gmail.com",
+    "url": "https://github.com/JackSParrot/scriptable-audio-pkg"
+  }
+}
