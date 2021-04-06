@@ -1,4 +1,4 @@
-# es.jacksparrot.audioso unity package
+# es.jacksparrot.audioso unity package install
 
 ## Dependencies
 You need to import the following packages before importing this package
