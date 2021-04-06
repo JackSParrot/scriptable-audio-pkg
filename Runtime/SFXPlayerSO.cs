@@ -49,19 +49,19 @@ namespace JackSParrot.Services.Audio
             return handler.Id;
         }
 
-        public int Play(string clipName, Vector3 at)
+        public int PlayAt(string clipName, Vector3 at)
         {
             Initialize();
             var handler = GetFreeHandler();
-            handler.Play(GetClipToPlay(clipName), at);
+            handler.PlayAt(GetClipToPlay(clipName), at);
             return handler.Id;
         }
 
-        public int Play(string clipName, Transform toFollow)
+        public int PlayFollowing(string clipName, Transform toFollow)
         {
             Initialize();
             var handler = GetFreeHandler();
-            handler.Play(GetClipToPlay(clipName), toFollow);
+            handler.PlayFollowing(GetClipToPlay(clipName), toFollow);
             return handler.Id;
         }
 
@@ -82,7 +82,7 @@ namespace JackSParrot.Services.Audio
             {
                 return;
             }
-
+            ReleaseReferenceCache();
             _initialized = false;
             _updater.UnscheduleUpdate(UpdateDelta);
             foreach(var handler in _handlers)
@@ -118,6 +118,20 @@ namespace JackSParrot.Services.Audio
 #endif
         }
 
+        protected override void Reset()
+        {
+            
+        }
+
+        private void OnHandlerDestroyed(AudioClipHandler handler)
+        {
+            if (_handlers.Contains(handler))
+            {
+                _handlers.Remove(handler);
+                ReleasePlayingClip(handler.Data);
+            }
+        }
+
         private void OnSceneUnloaded(SceneManagementServiceSO.SceneUnloadedEvent e)
         {
             ReleaseReferenceCache();
@@ -130,6 +144,7 @@ namespace JackSParrot.Services.Audio
             _handlers.Add(newHandler);
             newHandler.Id = _idGenerator++;
             newHandler.Volume = _volume;
+            newHandler.OnDestroyed += OnHandlerDestroyed;
             DontDestroyOnLoad(newHandler.gameObject);
             return newHandler;
         }
@@ -175,7 +190,7 @@ namespace JackSParrot.Services.Audio
         {
             foreach (var handler in _handlers)
             {
-                if (handler.IsAlive)
+                if (handler != null && handler.IsAlive)
                 {
                     handler.UpdateHandler(deltaTime);
                     if(!handler.IsAlive)
@@ -223,11 +238,6 @@ namespace JackSParrot.Services.Audio
             _updater.ScheduleUpdate(UpdateDelta);
             _eventDispatcher.AddListener<SceneManagementServiceSO.SceneUnloadedEvent>(OnSceneUnloaded);
             _initialized = true;
-        }
-
-        private void OnDisable()
-        {
-            Dispose();
         }
     }
 }

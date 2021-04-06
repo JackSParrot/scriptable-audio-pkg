@@ -17,6 +17,8 @@ namespace JackSParrot.Services.Audio
             }
         }
         public SFXData Data { get; private set; } = null;
+        public event System.Action<AudioClipHandler> OnDestroyed = h => { };
+        
         public bool IsAlive => _elapsed < _duration || _looping;
         public int Id = -1;
 
@@ -83,7 +85,7 @@ namespace JackSParrot.Services.Audio
             {
                 try
                 {
-                    data.ReferencedClip.LoadAssetAsync<AudioClip>().Completed += h => OnLoaded(h.Result);
+                    data.ReferencedClip.LoadAssetAsync().Completed += h => OnLoaded(h.Result);
                 }
                 catch (System.Exception) { }
             }
@@ -92,14 +94,14 @@ namespace JackSParrot.Services.Audio
 #endif
         }
 
-        public void Play(SFXData data, Vector3 position)
+        public void PlayAt(SFXData data, Vector3 position)
         {
             Play(data);
             _source.spatialBlend = 1f;
             _transform.position = position;
         }
 
-        public void Play(SFXData data, Transform parent)
+        public void PlayFollowing(SFXData data, Transform parent)
         {
             Play(data);
             _source.spatialBlend = 1f;
@@ -125,6 +127,11 @@ namespace JackSParrot.Services.Audio
             _toFollow = null;
             _looping = Data.Loop;
             _duration = clip.length;
+        }
+
+        private void OnDestroy()
+        {
+            OnDestroyed(this);
         }
     }
 }

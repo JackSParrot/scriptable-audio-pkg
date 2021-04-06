@@ -21,12 +21,6 @@ namespace JackSParrot.Services.Audio
             retVal._musicPlayer = musicPlayer;
             return retVal;
         }
-        
-        public override void Dispose()
-        {
-            _sfxPlayer.Dispose();
-            _musicPlayer.Dispose();
-        }
 
         public float Volume
         {
@@ -60,15 +54,25 @@ namespace JackSParrot.Services.Audio
         }
 
         public void PlayMusic(string name) => _musicPlayer.Play(name);
-
+        
         public void CrossFadeMusic(string clipName, float duration = 0.3f) => _musicPlayer.CrossFade(clipName, duration);
 
-        public int PlaySFX(string clipName) => _sfxPlayer.Play(clipName);
+        public void PlaySFX(string clipName) => _sfxPlayer.Play(clipName);
+        
+        public void PlaySFXAt(string clipName, Vector3 at) => _sfxPlayer.PlayAt(clipName, at);
+        
+        public void PlaySFXFollowing(string clipName, Transform toFollow) => _sfxPlayer.PlayFollowing(clipName, toFollow);
+        
+        public int StartPlayingPlaySFX(string clipName) => _sfxPlayer.Play(clipName);
 
-        public int PlaySFX(string clipName, Transform toFollow) => _sfxPlayer.Play(clipName, toFollow);
+        public int StartPlayingPlaySFXAt(string clipName, Vector3 at) => _sfxPlayer.PlayAt(clipName, at);
 
-        public int PlaySFX(string clipName, Vector3 at) => _sfxPlayer.Play(clipName, at);
+        public int StartPlayingPlaySFXFollowing(string clipName, Transform toFollow) => _sfxPlayer.PlayFollowing(clipName, toFollow);
 
         public void StopPlayingSFX(int id) => _sfxPlayer.StopPlaying(id);
+        
+        public override void Dispose() { }
+
+        protected override void Reset() { }
     }
 }

@@ -10,7 +10,7 @@ public class SFXData
 {
     public string ClipName;
 #if ADDRESSABLE_ASSETS
-    public AssetReference ReferencedClip;
+    public AssetReferenceT<AudioClip> ReferencedClip;
 #else
     public AudioClip Clip = null;
 #endif

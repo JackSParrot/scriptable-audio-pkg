@@ -84,6 +84,11 @@ namespace JackSParrot.Services.Audio
             Destroy(_source.gameObject);
         }
 
+        protected override void Reset()
+        {
+            Initialize();
+        }
+
         private void OnClipLoaded(AudioClip clip)
         {
             if (clip == null)
@@ -159,11 +164,6 @@ namespace JackSParrot.Services.Audio
             _source.spatialBlend = 0f;
             DontDestroyOnLoad(_source.gameObject);
             _initialized = true;
-        }
-
-        private void OnDisable()
-        {
-            Dispose();
         }
     }
 }
